@@ -3,15 +3,20 @@ import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
+import { apiDevPlugin } from './scripts/vite-api-plugin.ts'
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
+    apiDevPlugin(),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg'],
+      workbox: { importScripts: ['push-sw.js'] },
+      // Register the service worker under `npm run dev` too, so push can be tried locally.
+      devOptions: { enabled: true },
       manifest: {
         name: 'RemindU',
         short_name: 'RemindU',
@@ -25,6 +30,6 @@ export default defineConfig({
     }),
   ],
   resolve: {
-    alias: { '@': path.resolve(__dirname, './src') },
+    alias: { '@': path.resolve(import.meta.dirname, './src') },
   },
 })

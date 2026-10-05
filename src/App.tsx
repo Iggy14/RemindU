@@ -1,38 +1,36 @@
-import { useState } from 'react'
-import { Bell, CheckSquare, MessageCircle, Settings as SettingsIcon } from 'lucide-react'
-import { TabBar, type TabItem } from '@/components/TabBar'
-import { Chat } from '@/pages/Chat'
-import { Reminders } from '@/pages/Reminders'
-import { Settings } from '@/pages/Settings'
-import { Todo } from '@/pages/Todo'
+import { AppShell } from '@/components/AppShell'
+import { AuthProvider } from '@/components/AuthProvider'
+import { AuthScreen } from '@/components/AuthScreen'
+import { GroupGate } from '@/components/GroupGate'
+import { ScreenMessage } from '@/components/ScreenMessage'
+import { useAuth } from '@/lib/auth'
+import { isSupabaseConfigured } from '@/lib/supabase'
 
-type TabId = 'todo' | 'chat' | 'reminders' | 'settings'
-
-const TABS: TabItem<TabId>[] = [
-  { id: 'todo', label: 'To-do', icon: CheckSquare },
-  { id: 'chat', label: 'AI chat', icon: MessageCircle },
-  { id: 'reminders', label: 'Reminders', icon: Bell },
-  { id: 'settings', label: 'Settings', icon: SettingsIcon },
-]
-
-const PAGES: Record<TabId, () => React.JSX.Element> = {
-  todo: Todo,
-  chat: Chat,
-  reminders: Reminders,
-  settings: Settings,
+function SignedInGate() {
+  const { session, loading } = useAuth()
+  if (loading) return <ScreenMessage>Loading…</ScreenMessage>
+  if (!session) return <AuthScreen />
+  // key resets group state if a different user signs in on the same device
+  return (
+    <GroupGate key={session.user.id} userId={session.user.id}>
+      <AppShell />
+    </GroupGate>
+  )
 }
 
 function App() {
-  const [tab, setTab] = useState<TabId>('todo')
-  const Page = PAGES[tab]
-
+  if (!isSupabaseConfigured) {
+    return (
+      <ScreenMessage>
+        Supabase isn&apos;t configured. Copy <code className="mx-1">.env.example</code> to{' '}
+        <code className="mx-1">.env.local</code> and fill it in.
+      </ScreenMessage>
+    )
+  }
   return (
-    <div className="min-h-dvh bg-background text-foreground">
-      <main className="mx-auto max-w-md px-4 pt-[calc(env(safe-area-inset-top)+1.5rem)] pb-24">
-        <Page />
-      </main>
-      <TabBar tabs={TABS} active={tab} onChange={setTab} />
-    </div>
+    <AuthProvider>
+      <SignedInGate />
+    </AuthProvider>
   )
 }
 

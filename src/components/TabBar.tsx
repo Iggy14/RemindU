@@ -13,26 +13,35 @@ type TabBarProps<Id extends string> = {
   onChange: (id: Id) => void
 }
 
+/** Floating icon-only pill: a tight row of round buttons, the active one filled. */
 export function TabBar<Id extends string>({ tabs, active, onChange }: TabBarProps<Id>) {
   return (
-    <nav className="fixed inset-x-0 bottom-0 border-t bg-background pb-[env(safe-area-inset-bottom)]">
-      <ul className="mx-auto flex max-w-md">
-        {tabs.map(({ id, label, icon: Icon }) => (
-          <li key={id} className="flex-1">
-            <button
-              type="button"
-              onClick={() => onChange(id)}
-              aria-current={active === id ? 'page' : undefined}
-              className={cn(
-                'flex w-full flex-col items-center gap-1 py-2 text-xs',
-                active === id ? 'text-primary' : 'text-muted-foreground',
-              )}
-            >
-              <Icon className="size-5" />
-              {label}
-            </button>
-          </li>
-        ))}
+    <nav
+      aria-label="Main"
+      className="pointer-events-none fixed inset-x-0 bottom-0 flex justify-center pb-[calc(env(safe-area-inset-bottom)+0.75rem)]"
+    >
+      <ul className="pointer-events-auto flex gap-1 rounded-full border bg-background/85 p-1.5 shadow-lg ring-1 ring-black/5 backdrop-blur-xl">
+        {tabs.map(({ id, label, icon: Icon }) => {
+          const isActive = active === id
+          return (
+            <li key={id}>
+              <button
+                type="button"
+                onClick={() => onChange(id)}
+                aria-label={label}
+                aria-current={isActive ? 'page' : undefined}
+                className={cn(
+                  'flex size-12 items-center justify-center rounded-full transition-all duration-200 active:scale-90',
+                  isActive
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+                )}
+              >
+                <Icon className="size-5" />
+              </button>
+            </li>
+          )
+        })}
       </ul>
     </nav>
   )
