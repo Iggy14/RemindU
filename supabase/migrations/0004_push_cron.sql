@@ -14,7 +14,7 @@ select cron.schedule(
   '*/10 * * * *',
   $$
   select net.http_post(
-    url := 'https://YOUR-APP.vercel.app/api/send-reminders',
+    url := 'https://remind-u-ivory.vercel.app/api/send-reminders',
     headers := jsonb_build_object('Authorization', 'Bearer YOUR_CRON_SECRET')
   );
   $$
