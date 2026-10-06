@@ -1,4 +1,4 @@
-import type { Rule } from '@/ruleEngine'
+import type { RecurUnit, Rule } from '@/ruleEngine'
 
 export type RuleType = Rule['type']
 
@@ -6,7 +6,7 @@ export type RuleType = Rule['type']
 export type RuleDraft = {
   type: RuleType
   date: string
-  unit: 'month' | 'year'
+  unit: RecurUnit
   interval: string
   days: string
 }

@@ -6,6 +6,8 @@ export type GroupState = {
   members: Member[]
   /** IANA timezone used for due dates and reminder times */
   timezone: string
+  /** Re-fetch the group; call after leaving or joining */
+  reload: () => Promise<void>
 }
 
 export const GroupContext = createContext<GroupState | null>(null)

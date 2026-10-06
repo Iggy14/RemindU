@@ -1,5 +1,6 @@
 import { LogOut } from 'lucide-react'
 import { InviteCodeCard } from '@/components/InviteCodeCard'
+import { LeaveGroupCard } from '@/components/LeaveGroupCard'
 import { MemberList } from '@/components/MemberList'
 import { NotificationsCard } from '@/components/NotificationsCard'
 import { PageHeader } from '@/components/PageHeader'
@@ -23,6 +24,7 @@ export function Settings() {
         <InviteCodeCard code={group.invite_code} groupName={group.name} />
         <MemberList members={members} currentUserId={session?.user.id} />
         <NotificationsCard />
+        {session && <LeaveGroupCard userId={session.user.id} />}
         <Card>
           <CardHeader>
             <CardTitle>Account</CardTitle>

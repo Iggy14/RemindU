@@ -9,6 +9,7 @@ const BATCH = 100
 type EventRow = {
   id: string
   due_date: string
+  responsibility_id: string
   responsibilities: { group_id: string; owner_id: string | null; title: string; status: string }
 }
 type Subscription = { id: string; user_id: string; endpoint: string; keys: { p256dh: string; auth: string } }
@@ -55,7 +56,7 @@ export async function POST(request: Request): Promise<Response> {
   try {
     const { data: due, error } = await db
       .from('reminder_events')
-      .select('id, due_date, responsibilities!inner(group_id, owner_id, title, status)')
+      .select('id, due_date, responsibility_id, responsibilities!inner(group_id, owner_id, title, status)')
       .is('sent_at', null)
       .is('done_at', null)
       .lte('fire_at', new Date().toISOString())
@@ -94,7 +95,7 @@ export async function POST(request: Request): Promise<Response> {
         .filter((s) => recipients.get(event.id)?.includes(s.user_id))
         .map(async (sub) => {
           const today = todayIn(timezone.get(sub.user_id) ?? 'UTC')
-          const payload = buildPayload(event.id, event.responsibilities.title, event.due_date, today)
+          const payload = buildPayload(event.id, event.responsibility_id, event.responsibilities.title, event.due_date, today)
           try {
             await webpush.sendNotification({ endpoint: sub.endpoint, keys: sub.keys }, JSON.stringify(payload))
             sent++

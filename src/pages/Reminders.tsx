@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { BellOff, Plus, Search, SearchX } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -10,6 +10,7 @@ import { ReminderSections } from '@/components/ReminderSections'
 import { ResponsibilityForm } from '@/components/ResponsibilityForm'
 import { useResponsibilities } from '@/hooks/useResponsibilities'
 import { groupReminders } from '@/lib/groupReminders'
+import { navigate, useRoute } from '@/lib/router'
 import { CATEGORIES, type Category, type Responsibility } from '@/lib/responsibilities'
 import { todayIn } from '@/ruleEngine'
 
@@ -22,6 +23,37 @@ export function Reminders() {
   const [category, setCategory] = useState<Category | null>(null)
   const [editing, setEditing] = useState<Responsibility | null>(null)
   const [formOpen, setFormOpen] = useState(false)
+  const { reminderId } = useRoute()
+  const [highlightId, setHighlightId] = useState<string | null>(null)
+  const handledId = useRef<string | null>(null)
+
+  // Deep link (/reminders/:id, e.g. from a notification): show the item's space, clear filters, scroll to it.
+  useEffect(() => {
+    if (!reminderId) {
+      handledId.current = null
+      return
+    }
+    if (items === null || handledId.current === reminderId) return
+    handledId.current = reminderId
+    const target = items.find((i) => i.id === reminderId)
+    if (!target) {
+      navigate('/reminders', { replace: true }) // deleted, or not visible to this user
+      return
+    }
+    setSpace(target.owner_id === null ? 'shared' : 'personal')
+    setQuery('')
+    setCategory(null)
+    setHighlightId(reminderId)
+    requestAnimationFrame(() =>
+      document.getElementById(`reminder-${reminderId}`)?.scrollIntoView({ block: 'center', behavior: 'smooth' }),
+    )
+  }, [reminderId, items])
+
+  useEffect(() => {
+    if (!highlightId) return
+    const timer = setTimeout(() => setHighlightId(null), 4000)
+    return () => clearTimeout(timer)
+  }, [highlightId])
 
   const inSpace = useMemo(
     () => (items ?? []).filter((i) => (space === 'shared' ? i.owner_id === null : i.owner_id !== null)),
@@ -128,7 +160,14 @@ export function Reminders() {
           }
         />
       )}
-      <ReminderSections sections={sections} timezone={timezone} onDone={done} onEdit={openForm} onDelete={confirmDelete} />
+      <ReminderSections
+        sections={sections}
+        timezone={timezone}
+        onDone={done}
+        onEdit={openForm}
+        onDelete={confirmDelete}
+        highlightId={highlightId}
+      />
 
       <ResponsibilityForm
         open={formOpen}

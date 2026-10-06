@@ -1,18 +1,22 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { AuthContext, type AuthState } from '@/lib/auth'
-import { supabase } from '@/lib/supabase'
+import { openedFromRecoveryLink, supabase } from '@/lib/supabase'
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
+  const [recovering, setRecovering] = useState(openedFromRecoveryLink)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session)
       setLoading(false)
     })
-    const { data } = supabase.auth.onAuthStateChange((_event, next) => setSession(next))
+    const { data } = supabase.auth.onAuthStateChange((event, next) => {
+      if (event === 'PASSWORD_RECOVERY') setRecovering(true)
+      setSession(next)
+    })
     return () => data.subscription.unsubscribe()
   }, [])
 
@@ -33,10 +37,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { error: error?.message ?? null, needsConfirmation: !error && !data.session }
       },
       signOut: async () => {
+        setRecovering(false)
         await supabase.auth.signOut()
       },
+      requestPasswordReset: async (email) => {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: window.location.origin,
+        })
+        return error?.message ?? null
+      },
+      recovering,
+      updatePassword: async (password) => {
+        const { error } = await supabase.auth.updateUser({ password })
+        if (!error) setRecovering(false)
+        return error?.message ?? null
+      },
     }),
-    [session, loading],
+    [session, loading, recovering],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

@@ -38,6 +38,26 @@ describe('computeNextDue: recurring monthly', () => {
   })
 })
 
+describe('computeNextDue: recurring weekly and daily', () => {
+  const every = (unit: 'day' | 'week', interval: number, anchor: string): Rule => ({ type: 'recurring', unit, interval, anchor })
+
+  it('weekly lands on the same weekday', () => {
+    expect(computeNextDue(every('week', 1, '2026-01-05'), '2026-01-06')).toBe('2026-01-12')
+  })
+  it('every 2 weeks stays on the fortnight cycle', () => {
+    expect(computeNextDue(every('week', 2, '2026-01-05'), '2026-01-20')).toBe('2026-02-02')
+  })
+  it('every 3 weeks returns today when today is a due day', () => {
+    expect(computeNextDue(every('week', 3, '2026-01-05'), '2026-01-26')).toBe('2026-01-26')
+  })
+  it('returns the anchor when it is still in the future', () => {
+    expect(computeNextDue(every('week', 2, '2026-03-01'), '2026-01-01')).toBe('2026-03-01')
+  })
+  it('every 10 days walks forward from the anchor', () => {
+    expect(computeNextDue(every('day', 10, '2026-01-01'), '2026-01-12')).toBe('2026-01-21')
+  })
+})
+
 describe('computeNextDue: recurring yearly', () => {
   it('rolls to next year after the date passes', () => {
     expect(computeNextDue(yearly('2024-06-01'), '2026-06-02')).toBe('2027-06-01')

@@ -1,5 +1,5 @@
 import { addDays, addMonths, addYears, format, parse } from 'date-fns'
-import type { DateString } from './types.js'
+import type { DateString, RecurUnit } from './types.js'
 
 const FORMAT = 'yyyy-MM-dd'
 
@@ -19,10 +19,19 @@ export function shiftDays(value: DateString, days: number): DateString {
   return formatDate(addDays(parseDate(value), days))
 }
 
-/** Add months/years to `value`, clamping to month-end (always computed from `value`, never chained). */
-export function shiftUnits(value: DateString, unit: 'month' | 'year', amount: number): DateString {
+/** Add days/weeks/months/years to `value`, clamping to month-end (always computed from `value`, never chained). */
+export function shiftUnits(value: DateString, unit: RecurUnit, amount: number): DateString {
   const start = parseDate(value)
-  return formatDate(unit === 'month' ? addMonths(start, amount) : addYears(start, amount))
+  switch (unit) {
+    case 'day':
+      return formatDate(addDays(start, amount))
+    case 'week':
+      return formatDate(addDays(start, amount * 7))
+    case 'month':
+      return formatDate(addMonths(start, amount))
+    case 'year':
+      return formatDate(addYears(start, amount))
+  }
 }
 
 /** Today's calendar date in `timeZone`. */

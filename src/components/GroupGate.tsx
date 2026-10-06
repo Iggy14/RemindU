@@ -8,7 +8,7 @@ type Loaded =
   | { status: 'loading' }
   | { status: 'none' }
   | { status: 'error'; message: string }
-  | { status: 'ready'; value: GroupState }
+  | { status: 'ready'; value: Omit<GroupState, 'reload'> }
 
 async function resolveGroup(userId: string): Promise<Loaded> {
   try {
@@ -45,6 +45,6 @@ export function GroupGate({ userId, children }: { userId: string; children: Reac
     case 'none':
       return <GroupSetup onDone={reload} />
     case 'ready':
-      return <GroupContext.Provider value={state.value}>{children}</GroupContext.Provider>
+      return <GroupContext.Provider value={{ ...state.value, reload }}>{children}</GroupContext.Provider>
   }
 }

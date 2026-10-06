@@ -8,9 +8,10 @@ type ReminderSectionsProps = {
   onDone: (item: Responsibility) => void
   onEdit: (item: Responsibility) => void
   onDelete: (item: Responsibility) => void
+  highlightId?: string | null
 }
 
-export function ReminderSections({ sections, timezone, onDone, onEdit, onDelete }: ReminderSectionsProps) {
+export function ReminderSections({ sections, timezone, onDone, onEdit, onDelete, highlightId }: ReminderSectionsProps) {
   return (
     <div className="flex flex-col gap-5">
       {sections.map((section) => (
@@ -32,6 +33,7 @@ export function ReminderSections({ sections, timezone, onDone, onEdit, onDelete 
                 onDone={onDone}
                 onEdit={onEdit}
                 onDelete={onDelete}
+                highlighted={item.id === highlightId}
               />
             ))}
           </div>

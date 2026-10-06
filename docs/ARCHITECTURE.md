@@ -30,11 +30,12 @@ pg_cron (10 min) ──► /api/send-reminders ──► find due reminders ─�
 ## Modules
 
 - `src/ruleEngine/` – pure functions: `computeNextDue(rule, now)`, `expandOffsets(due, offsets)`, handles month-end, leap years, "N days after previous", recurrence. No I/O, fully unit-tested.
-- Rule shapes (`src/ruleEngine/types.ts`): `once` (deadline/expiry), `recurring` (every N months/years from an anchor; month-end clamps, computed from the anchor so it never drifts), `after_previous` (N days after the last time done). Dates are timezone-free `YYYY-MM-DD` strings; only `fire_at` is a UTC instant, converted from wall-clock time in the group timezone. `once`/`after_previous` may return a past date, which means overdue. New rule kinds: add a variant to `Rule`, handle it in `computeNextDue`, add tests, then extend the AI zod schema.
+- Rule shapes (`src/ruleEngine/types.ts`): `once` (deadline/expiry), `recurring` (every N days/weeks/months/years from an anchor, any N; month-end clamps, computed from the anchor so it never drifts), `after_previous` (N days after the last time done). Dates are timezone-free `YYYY-MM-DD` strings; only `fire_at` is a UTC instant, converted from wall-clock time in the group timezone. `once`/`after_previous` may return a past date, which means overdue. New rule kinds: add a variant to `Rule`, handle it in `computeNextDue`, add tests, then extend the AI zod schema.
 - `src/ai/schema.ts` – zod schema for what the AI may emit (title, category, scope, anchor date, recurrence, offsets, missing[]).
 - `api/ai/chat.ts` – one endpoint for the AI chat tab: a message becomes a new draft, an edit to an existing reminder, a follow-up question, or an answer (see "AI pattern").
 - `api/send-reminders.ts` – authenticated by a shared secret; queries due reminders, fans out pushes, marks them sent.
-- `src/pages/` – `Todo`, `Chat`, `Reminders`, `Settings` (bottom tab bar).
+- `src/lib/routes.ts` + `src/lib/router.ts` – a tiny History API router (no library): `/`, `/chat`, `/reminders`, `/reminders/:id`, `/settings`. `useRoute()` reads the URL, `navigate(path)` pushes it; the tab bar and browser back button both work. `vercel.json` rewrites every non-`/api` path to `index.html` so deep links survive a refresh. New screens: add the path to `routes.ts` (with a test) and a tab/page in `AppShell`.
+- `src/pages/` – `Todo`, `Chat`, `Reminders`, `Settings` (bottom tab bar). `Todo` is in the main bundle; the other tabs are `React.lazy` in `AppShell` (add new tabs the same way). `vite.config.ts` splits `react` and `supabase` into vendor chunks.
 
 ## Data model (Postgres)
 
@@ -52,6 +53,8 @@ Categories: subscription, bill, expiry/document, deadline, custom.
 ## Auth and groups pattern
 
 - Email + password via Supabase Auth. `AuthProvider` (session) -> `GroupGate` (user must belong to a group) -> `AppShell`. Components read `useAuth()` / `useGroup()`.
+- **Password reset:** "Forgot password?" on `AuthScreen` calls `requestPasswordReset` (Supabase `resetPasswordForEmail`, redirecting to the app origin). The email link signs the user in and `AuthProvider` sets `recovering`, which makes `SignedInGate` show `SetPasswordScreen` until `updatePassword` succeeds. `recovering` starts from `openedFromRecoveryLink` (`src/lib/supabase.ts`, reads `type=recovery` from the URL hash before the client consumes it) because `PASSWORD_RECOVERY` can fire before React subscribes. Every origin that runs the app must be in Supabase → Authentication → URL Configuration → Redirect URLs.
+- **Leaving:** `leaveGroup` deletes the user's private responsibilities in the group, then their `group_members` row (the "leave" RLS policy). `GroupGate.reload` (exposed as `useGroup().reload`) re-resolves the group, which lands on `GroupSetup` when the user has none.
 - Clients can **only read** `groups` and `group_members`. Creating and joining go through `security definer` RPCs (`create_group`, `join_group`). Do not add client insert policies for these tables.
 - RLS policies that need membership use `is_group_member(gid)` / `shares_group_with(uid)` (security definer) to avoid policy recursion. Use them for new group-scoped tables.
 - Migrations live in `supabase/migrations/`, numbered, and are run by hand in the Supabase SQL Editor.
@@ -85,6 +88,7 @@ Categories: subscription, bill, expiry/document, deadline, custom.
 
 - Everyone in the group is notified for their own private reminders **and** all shared reminders, regardless of which space they are viewing.
 - Permission is requested from a button tap (required on iOS). Subscription stored per device.
+- **Deep links:** the push payload `url` is `/reminders/<responsibility id>`. On tap, `public/push-sw.js` opens that URL, or, if the app is already open, `postMessage({type:'navigate'})` which `useNotificationNavigation` turns into `navigate()`. `Reminders` then switches to the right space, clears filters and highlights the row.
 - **Pieces:** `public/push-sw.js` (push + click handlers, pulled into the generated service worker by `workbox.importScripts` in `vite.config.ts`); `src/lib/push.ts` (subscribe/unsubscribe, saves to `push_subscriptions`); `NotificationsCard` in Settings; `api/send-reminders.ts` (service role, so it bypasses RLS).
 - **Sending:** the route finds unsent, undone `reminder_events` with `fire_at <= now`, claims them by setting `sent_at` first (so overlapping runs never double-send, and a failed send is not retried), resolves recipients (owner if private, else all group members), and builds each message in the recipient's own timezone (`api/_lib/pushPayload.ts`). Subscriptions answering 404/410 are deleted.
 - **Env vars:** `VITE_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`, `SUPABASE_SERVICE_ROLE_KEY`, `CRON_SECRET` (see `.env.example`). The scheduler is `supabase/migrations/0004_push_cron.sql`.

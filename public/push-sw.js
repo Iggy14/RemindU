@@ -7,7 +7,7 @@ self.addEventListener('push', (event) => {
     self.registration.showNotification(data.title ?? 'RemindU', {
       body: data.body,
       tag: data.tag,
-      icon: '/favicon.svg',
+      icon: '/icon-192.png',
       data: { url: data.url ?? '/' },
     }),
   )
@@ -17,10 +17,12 @@ self.addEventListener('notificationclick', (event) => {
   event.notification.close()
   const url = event.notification.data?.url ?? '/'
   event.waitUntil(
-    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windows) => {
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(async (windows) => {
       const open = windows[0]
-      if (open) return open.focus()
-      return self.clients.openWindow(url)
+      if (!open) return self.clients.openWindow(url)
+      // The app listens for this (src/lib/route.ts) and navigates without a reload.
+      open.postMessage({ type: 'navigate', url })
+      return open.focus()
     }),
   )
 })

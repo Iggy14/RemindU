@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { SendHorizontal } from 'lucide-react'
 import { Bubble, BubbleContent } from '@/components/ui/bubble'
 import { Button } from '@/components/ui/button'
@@ -26,6 +26,12 @@ export function Chat() {
   const { messages, busy, error, send, confirm, discard, timezone } = useChat()
   const [text, setText] = useState('')
 
+  // Pin the page so the input box stays put; only the message list scrolls.
+  useEffect(() => {
+    document.documentElement.classList.add('lock-scroll')
+    return () => document.documentElement.classList.remove('lock-scroll')
+  }, [])
+
   function onSubmit(e: FormEvent) {
     e.preventDefault()
     const value = text.trim()
@@ -48,7 +54,7 @@ export function Chat() {
             <MessageScrollerViewport>
               <MessageScrollerContent>
                 {messages.map((m) => (
-                  <MessageScrollerItem key={m.id} messageId={String(m.id)} scrollAnchor={m.role === 'user'}>
+                  <MessageScrollerItem key={m.id} messageId={String(m.id)}>
                     <Message align={m.role === 'user' ? 'end' : 'start'}>
                       <MessageContent>
                         <Bubble

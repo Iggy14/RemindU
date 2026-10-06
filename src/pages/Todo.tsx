@@ -1,3 +1,4 @@
+import { DueCalendar } from '@/components/DueCalendar'
 import { HomeHero } from '@/components/HomeHero'
 import { ResponsibilityRow } from '@/components/ResponsibilityRow'
 import { useResponsibilities } from '@/hooks/useResponsibilities'
@@ -33,6 +34,14 @@ export function Todo() {
       {items === null && !error && <p className="text-muted-foreground">Loading…</p>}
       {items !== null && needsAttention.length === 0 && (
         <p className="text-muted-foreground">You&apos;re all caught up. Nothing is due in the next {ATTENTION_WINDOW_DAYS} days.</p>
+      )}
+      {items !== null && (
+        <div className="mb-3">
+          <DueCalendar
+            today={today}
+            dueDates={items.filter((i) => i.status === 'active' && i.next_due).map((i) => i.next_due!)}
+          />
+        </div>
       )}
       <div className="flex flex-col gap-2">
         {needsAttention.map((item) => (

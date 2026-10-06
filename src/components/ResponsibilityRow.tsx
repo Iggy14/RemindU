@@ -13,11 +13,13 @@ type ResponsibilityRowProps = {
   /** Omit to hide edit/delete (e.g. on the to-do list) */
   onEdit?: (item: Responsibility) => void
   onDelete?: (item: Responsibility) => void
+  /** Ring the row, e.g. when opened from a notification */
+  highlighted?: boolean
 }
 
-export function ResponsibilityRow({ item, timezone, onDone, onEdit, onDelete }: ResponsibilityRowProps) {
+export function ResponsibilityRow({ item, timezone, onDone, onEdit, onDelete, highlighted }: ResponsibilityRowProps) {
   return (
-    <Card size="sm">
+    <Card size="sm" id={`reminder-${item.id}`} className={highlighted ? "ring-2 ring-gold" : undefined}>
       <CardContent className="flex items-center gap-3">
         <div className="min-w-0 flex-1">
           <p className="truncate font-medium">{item.title}</p>

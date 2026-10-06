@@ -10,6 +10,12 @@ function when(days: number): string {
 }
 
 /** What a recipient sees. `today` is the recipient's own calendar date, so "tomorrow" is right for them. */
-export function buildPayload(eventId: string, title: string, dueDate: string, today: string): PushPayload {
-  return { title, body: `${title} is ${when(daysUntil(dueDate, today))}`, url: '/', tag: eventId }
+export function buildPayload(
+  eventId: string,
+  responsibilityId: string,
+  title: string,
+  dueDate: string,
+  today: string,
+): PushPayload {
+  return { title, body: `${title} is ${when(daysUntil(dueDate, today))}`, url: `/reminders/${responsibilityId}`, tag: eventId }
 }

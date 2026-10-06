@@ -29,15 +29,18 @@ export const aiReminderSchema = z.object({
     .enum(['once', 'recurring', 'after_previous'])
     .nullable()
     .describe(
-      'once = a single deadline/expiry date; recurring = repeats every N months/years (bills, subscriptions); after_previous = due N days after it was last done',
+      'once = a single deadline/expiry date; recurring = repeats every N days/weeks/months/years (bills, subscriptions, chores); after_previous = due N days after it was last done',
     ),
   date: dateSpecSchema
     .nullable()
     .describe(
       'once: the due/expiry date. recurring: a date it falls on (monthly: just the day; yearly: month and day). after_previous: when it was last done',
     ),
-  unit: z.enum(['month', 'year']).nullable().describe('recurring only: month or year'),
-  interval: z.number().nullable().describe('recurring only: every N units. "every month" = 1, "quarterly" = 3 months'),
+  unit: z.enum(['day', 'week', 'month', 'year']).nullable().describe('recurring only: day, week, month or year'),
+  interval: z
+    .number()
+    .nullable()
+    .describe('recurring only: every N units. "every month" = 1, "every 2 weeks" = 2 weeks, "quarterly" = 3 months'),
   days: z.number().nullable().describe('after_previous only: due again N days after last done'),
   reminderDaysBefore: z
     .array(z.number())

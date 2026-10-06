@@ -129,5 +129,12 @@
     }
   html {
     @apply font-sans;
+    touch-action: pan-x pan-y;
+    overscroll-behavior: none;
+    }
+  html.lock-scroll,
+  html.lock-scroll body {
+    overflow: hidden;
+    height: 100%;
     }
 }

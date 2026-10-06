@@ -13,6 +13,12 @@ export type AuthState = {
     displayName: string,
   ) => Promise<{ error: string | null; needsConfirmation: boolean }>
   signOut: () => Promise<void>
+  /** Emails a password-reset link. Returns an error message, or null on success. */
+  requestPasswordReset: (email: string) => Promise<string | null>
+  /** True after the user opens a reset link, until they choose a new password. */
+  recovering: boolean
+  /** Sets a new password for the current (recovery) session. Returns an error message, or null. */
+  updatePassword: (password: string) => Promise<string | null>
 }
 
 export const AuthContext = createContext<AuthState | null>(null)

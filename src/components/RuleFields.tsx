@@ -2,6 +2,7 @@ import { Field, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { type RuleDraft, type RuleType } from '@/lib/ruleDraft'
+import type { RecurUnit } from '@/ruleEngine'
 
 const RULE_TYPES = [
   { value: 'once', label: 'One time (deadline or expiry)' },
@@ -10,6 +11,8 @@ const RULE_TYPES = [
 ]
 
 const UNITS = [
+  { value: 'day', label: 'Day(s)' },
+  { value: 'week', label: 'Week(s)' },
   { value: 'month', label: 'Month(s)' },
   { value: 'year', label: 'Year(s)' },
 ]
@@ -51,7 +54,7 @@ export function RuleFields({ draft, onChange }: RuleFieldsProps) {
           </Field>
           <Field>
             <FieldLabel>Unit</FieldLabel>
-            <Select items={UNITS} value={draft.unit} onValueChange={(v) => v && set({ unit: v as 'month' | 'year' })}>
+            <Select items={UNITS} value={draft.unit} onValueChange={(v) => v && set({ unit: v as RecurUnit })}>
               <SelectTrigger className="w-full">
                 <SelectValue />
               </SelectTrigger>

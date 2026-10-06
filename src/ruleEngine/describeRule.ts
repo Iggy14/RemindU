@@ -6,8 +6,7 @@ export function describeRule(rule: Rule): string {
     case 'once':
       return 'One time'
     case 'recurring': {
-      const unit = rule.unit === 'month' ? 'month' : 'year'
-      return rule.interval === 1 ? `Every ${unit}` : `Every ${rule.interval} ${unit}s`
+      return rule.interval === 1 ? `Every ${rule.unit}` : `Every ${rule.interval} ${rule.unit}s`
     }
     case 'after_previous':
       return `${rule.days} days after last done`

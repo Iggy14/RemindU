@@ -46,3 +46,19 @@ export async function ensureTimezone(userId: string): Promise<string> {
   if (updateError) throw updateError
   return browser
 }
+
+/**
+ * Leave a group. Your private reminders there become unreachable once you are no longer a
+ * member, so they are deleted first (RLS only allows this while you are still in the group).
+ * Shared reminders stay with the group.
+ */
+export async function leaveGroup(groupId: string, userId: string): Promise<void> {
+  const { error: itemsError } = await supabase
+    .from('responsibilities')
+    .delete()
+    .eq('group_id', groupId)
+    .eq('owner_id', userId)
+  if (itemsError) throw itemsError
+  const { error } = await supabase.from('group_members').delete().eq('group_id', groupId).eq('user_id', userId)
+  if (error) throw error
+}
