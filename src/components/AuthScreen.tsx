@@ -91,7 +91,7 @@ export function AuthScreen() {
   return (
     <Shell>
       <Card className="w-full max-w-sm">
-        <CardHeader>
+        <CardHeader className="text-center">
           <CardTitle>{isSignUp ? 'Create your account' : 'Welcome back'}</CardTitle>
           <CardDescription>
             {isSignUp ? 'It only takes a minute.' : 'Sign in to see what needs your attention.'}
@@ -265,15 +265,23 @@ function ForgotPasswordCard({ initialEmail, onBack }: { initialEmail: string; on
 
 export function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-dvh flex-col items-center justify-center gap-6 bg-[#fae9d6] p-4">
-      <img
-        src="/logo.webp"
-        alt="RemindU — never miss a moment"
-        width={320}
-        height={215}
-        className="w-64 rounded-2xl shadow-sm sm:w-72"
-      />
-      {children}
+    <div className="flex min-h-dvh flex-col items-center bg-background">
+      <div className="relative h-[38dvh] min-h-56 w-full rounded-b-[3rem] bg-[#fae9d6]">
+        <div className="absolute bottom-0 left-1/2 flex size-32 -translate-x-1/2 translate-y-1/2 items-center justify-center rounded-full bg-background shadow-sm">
+          <img src="/logo-mark.png" alt="" width={245} height={170} className="w-24 translate-x-1.5" />
+        </div>
+      </div>
+      <div className="flex w-full flex-1 flex-col items-center gap-6 px-4 pt-24 pb-8">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold tracking-tight">
+            Remind<span className="text-gold">U</span>
+          </h1>
+          <p className="mt-1 text-xs font-medium tracking-[0.25em] text-muted-foreground uppercase">
+            Never miss a moment
+          </p>
+        </div>
+        {children}
+      </div>
     </div>
   )
 }

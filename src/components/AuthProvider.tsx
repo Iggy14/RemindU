@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { AuthContext, type AuthState } from '@/lib/auth'
+import { navigate } from '@/lib/router'
 import { openedFromRecoveryLink, supabase } from '@/lib/supabase'
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -39,6 +40,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       signOut: async () => {
         setRecovering(false)
         await supabase.auth.signOut()
+        navigate('/', { replace: true }) // the next sign-in always lands on the to-do tab
       },
       requestPasswordReset: async (email) => {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
