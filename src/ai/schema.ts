@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { CATEGORIES } from './draft'
+import { CATEGORIES } from './draft.js'
 
 /**
  * What the model may emit. It only EXTRACTS what the user said; it never works out a calendar date.

@@ -1,5 +1,5 @@
 // Shared by the client and the /api routes: use relative imports only in src/ai (no '@/' alias).
-import type { Offset, Rule } from '../ruleEngine/types'
+import type { Offset, Rule } from '../ruleEngine/types.js'
 
 export const CATEGORIES = ['subscription', 'bill', 'expiry', 'deadline', 'custom'] as const
 export type Category = (typeof CATEGORIES)[number]

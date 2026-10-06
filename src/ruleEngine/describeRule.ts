@@ -1,4 +1,4 @@
-import type { Rule } from './types'
+import type { Rule } from './types.js'
 
 /** Short human description of a rule, e.g. "Every 3 months". */
 export function describeRule(rule: Rule): string {

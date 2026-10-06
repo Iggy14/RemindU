@@ -1,10 +1,10 @@
 import { generateText, Output } from 'ai'
-import type { DateString } from '../../ruleEngine/types'
-import type { ChatTurn } from '../draft'
-import { routeMessage, type ChatItem, type ChatReply } from '../route'
-import { aiMessageSchema } from '../schema'
-import { getModel } from './model'
-import { buildSystemPrompt } from './prompt'
+import type { DateString } from '../../ruleEngine/types.js'
+import type { ChatTurn } from '../draft.js'
+import { routeMessage, type ChatItem, type ChatReply } from '../route.js'
+import { aiMessageSchema } from '../schema.js'
+import { getModel } from './model.js'
+import { buildSystemPrompt } from './prompt.js'
 
 /** One chat message (with the conversation so far) -> a new draft, an edit, an answer, or a follow-up question. */
 export async function respond(messages: ChatTurn[], today: DateString, timezone: string, items: ChatItem[]): Promise<ChatReply> {

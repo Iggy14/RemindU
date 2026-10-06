@@ -1,7 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
-import type { Category } from '../../src/ai/draft'
-import type { ChatItem } from '../../src/ai/route'
-import type { Rule } from '../../src/ruleEngine/types'
+import type { Category } from '../../src/ai/draft.js'
+import type { ChatItem } from '../../src/ai/route.js'
+import type { Rule } from '../../src/ruleEngine/types.js'
 
 type Row = {
   id: string

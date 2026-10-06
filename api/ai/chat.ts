@@ -1,9 +1,9 @@
 import { z } from 'zod'
-import { respond } from '../../src/ai/server/respond'
-import { todayIn } from '../../src/ruleEngine/dates'
-import { getCaller } from '../_lib/auth'
-import { fetchChatItems } from '../_lib/items'
-import { allowRequest } from '../_lib/rateLimit'
+import { respond } from '../../src/ai/server/respond.js'
+import { todayIn } from '../../src/ruleEngine/dates.js'
+import { getCaller } from '../_lib/auth.js'
+import { fetchChatItems } from '../_lib/items.js'
+import { allowRequest } from '../_lib/rateLimit.js'
 
 const bodySchema = z.object({
   messages: z

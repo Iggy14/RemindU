@@ -1,8 +1,8 @@
 import { timingSafeEqual } from 'node:crypto'
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import webpush from 'web-push'
-import { todayIn } from '../src/ruleEngine/dates'
-import { buildPayload } from './_lib/pushPayload'
+import { todayIn } from '../src/ruleEngine/dates.js'
+import { buildPayload } from './_lib/pushPayload.js'
 
 const BATCH = 100
 

@@ -1,7 +1,7 @@
 import { getDaysInMonth } from 'date-fns'
-import { formatDate, parseDate, shiftDays, shiftUnits } from '../ruleEngine/dates'
-import type { DateString } from '../ruleEngine/types'
-import type { DateSpec } from './schema'
+import { formatDate, parseDate, shiftDays, shiftUnits } from '../ruleEngine/dates.js'
+import type { DateString } from '../ruleEngine/types.js'
+import type { DateSpec } from './schema.js'
 
 /**
  * `upcoming`: the date is in the future or today (deadlines, due dates).

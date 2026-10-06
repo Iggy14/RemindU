@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { applyEdit } from './applyEdit'
-import type { Draft } from './draft'
-import { routeMessage, type ChatItem } from './route'
-import type { AiMessage, DateSpec } from './schema'
+import { applyEdit } from './applyEdit.js'
+import type { Draft } from './draft.js'
+import { routeMessage, type ChatItem } from './route.js'
+import type { AiMessage, DateSpec } from './schema.js'
 
 const TODAY = '2026-03-10'
 

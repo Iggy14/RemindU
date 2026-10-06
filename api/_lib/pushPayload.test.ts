@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { buildPayload } from './pushPayload'
+import { buildPayload } from './pushPayload.js'
 
 describe('buildPayload', () => {
   it('words the due date relative to the recipient', () => {

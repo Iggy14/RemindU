@@ -1,8 +1,8 @@
-import type { DateString } from '../ruleEngine/types'
-import { applyEdit } from './applyEdit'
-import type { Draft } from './draft'
-import { interpret, type Interpretation } from './interpret'
-import type { AiMessage } from './schema'
+import type { DateString } from '../ruleEngine/types.js'
+import { applyEdit } from './applyEdit.js'
+import type { Draft } from './draft.js'
+import { interpret, type Interpretation } from './interpret.js'
+import type { AiMessage } from './schema.js'
 
 /** One of the user's existing reminders, as the model sees it (by `number`) and as the server maps it back (by `id`). */
 export type ChatItem = {

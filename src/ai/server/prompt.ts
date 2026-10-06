@@ -1,6 +1,6 @@
-import { describeRule } from '../../ruleEngine/describeRule'
-import { daysUntil } from '../../ruleEngine/dates'
-import type { ChatItem } from '../route'
+import { describeRule } from '../../ruleEngine/describeRule.js'
+import { daysUntil } from '../../ruleEngine/dates.js'
+import type { ChatItem } from '../route.js'
 
 /** The user's reminders as numbered lines the model can refer to. Titles are user data, so keep them on one line. */
 export function formatItems(items: ChatItem[], today: string): string {

@@ -1,5 +1,5 @@
 import { addDays, addMonths, addYears, format, parse } from 'date-fns'
-import type { DateString } from './types'
+import type { DateString } from './types.js'
 
 const FORMAT = 'yyyy-MM-dd'
 

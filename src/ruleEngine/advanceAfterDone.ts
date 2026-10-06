@@ -1,6 +1,6 @@
-import { computeNextDue } from './computeNextDue'
-import { shiftDays } from './dates'
-import type { DateString, Rule } from './types'
+import { computeNextDue } from './computeNextDue.js'
+import { shiftDays } from './dates.js'
+import type { DateString, Rule } from './types.js'
 
 export type Advanced = {
   rule: Rule

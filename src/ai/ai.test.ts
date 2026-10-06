@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { interpret } from './interpret'
-import { resolveDate } from './resolveDate'
-import type { AiReminder, DateSpec } from './schema'
+import { interpret } from './interpret.js'
+import { resolveDate } from './resolveDate.js'
+import type { AiReminder, DateSpec } from './schema.js'
 
 const spec = (parts: Partial<DateSpec>): DateSpec => ({
   year: null,

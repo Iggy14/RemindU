@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { advanceAfterDone } from './index'
+import { advanceAfterDone } from './index.js'
 
 describe('advanceAfterDone', () => {
   it('once: finished', () => {

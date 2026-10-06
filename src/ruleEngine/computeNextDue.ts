@@ -1,6 +1,6 @@
 import { differenceInCalendarMonths, differenceInCalendarYears } from 'date-fns'
-import { parseDate, shiftDays, shiftUnits } from './dates'
-import type { DateString, DueStatus, Rule } from './types'
+import { parseDate, shiftDays, shiftUnits } from './dates.js'
+import type { DateString, DueStatus, Rule } from './types.js'
 
 /**
  * The next due date for a rule, as seen on `today` (a calendar date in the group timezone).

@@ -1,8 +1,8 @@
-import type { DateString, Rule } from '../ruleEngine/types'
-import type { Draft } from './draft'
-import { buildRule, FALLBACK_QUESTIONS, isPositiveInt, parseOffsets, type Missing } from './interpret'
-import { resolveDate } from './resolveDate'
-import type { AiReminder } from './schema'
+import type { DateString, Rule } from '../ruleEngine/types.js'
+import type { Draft } from './draft.js'
+import { buildRule, FALLBACK_QUESTIONS, isPositiveInt, parseOffsets, type Missing } from './interpret.js'
+import { resolveDate } from './resolveDate.js'
+import type { AiReminder } from './schema.js'
 
 export type EditResult =
   | { status: 'ready'; draft: Draft }

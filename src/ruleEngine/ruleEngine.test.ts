@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { computeNextDue, dueStatus, expandOffsets, latestMissedFire, planReminders, todayIn } from './index'
-import type { Rule } from './types'
+import { computeNextDue, dueStatus, expandOffsets, latestMissedFire, planReminders, todayIn } from './index.js'
+import type { Rule } from './types.js'
 
 const monthly = (anchor: string, interval = 1): Rule => ({ type: 'recurring', unit: 'month', interval, anchor })
 const yearly = (anchor: string): Rule => ({ type: 'recurring', unit: 'year', interval: 1, anchor })

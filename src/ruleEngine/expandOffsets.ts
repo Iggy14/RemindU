@@ -1,5 +1,5 @@
-import { shiftDays, zonedToUtc } from './dates'
-import type { DateString, Offset, ReminderFire } from './types'
+import { shiftDays, zonedToUtc } from './dates.js'
+import type { DateString, Offset, ReminderFire } from './types.js'
 
 /**
  * Turn a due date into UTC fire times, one per offset, sorted earliest first.

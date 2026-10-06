@@ -1,4 +1,4 @@
-import { daysUntil } from '../../src/ruleEngine/dates'
+import { daysUntil } from '../../src/ruleEngine/dates.js'
 
 export type PushPayload = { title: string; body: string; url: string; tag: string }
 

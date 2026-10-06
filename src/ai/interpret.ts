@@ -1,7 +1,7 @@
-import type { DateString, Offset, Rule } from '../ruleEngine/types'
-import type { Draft } from './draft'
-import { resolveDate } from './resolveDate'
-import type { AiReminder } from './schema'
+import type { DateString, Offset, Rule } from '../ruleEngine/types.js'
+import type { Draft } from './draft.js'
+import { resolveDate } from './resolveDate.js'
+import type { AiReminder } from './schema.js'
 
 export type Interpretation =
   | { status: 'ready'; draft: Draft }

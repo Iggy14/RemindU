@@ -1,14 +1,14 @@
-import { computeNextDue } from './computeNextDue'
-import { expandOffsets } from './expandOffsets'
-import { todayIn } from './dates'
-import type { Offset, ReminderFire, Rule } from './types'
+import { computeNextDue } from './computeNextDue.js'
+import { expandOffsets } from './expandOffsets.js'
+import { todayIn } from './dates.js'
+import type { Offset, ReminderFire, Rule } from './types.js'
 
-export { computeNextDue, dueStatus } from './computeNextDue'
-export { expandOffsets, latestMissedFire } from './expandOffsets'
-export { daysUntil, todayIn } from './dates'
-export { advanceAfterDone } from './advanceAfterDone'
-export { describeRule } from './describeRule'
-export type * from './types'
+export { computeNextDue, dueStatus } from './computeNextDue.js'
+export { expandOffsets, latestMissedFire } from './expandOffsets.js'
+export { daysUntil, todayIn } from './dates.js'
+export { advanceAfterDone } from './advanceAfterDone.js'
+export { describeRule } from './describeRule.js'
+export type * from './types.js'
 
 /** Everything the scheduler needs for one responsibility: next due date plus its pending fire times. */
 export function planReminders(rule: Rule, offsets: Offset[], timeZone: string, now: Date = new Date()) {
