@@ -37,7 +37,7 @@ export function Chat() {
   return (
     <>
       <img
-        src="/aichat.jpg"
+        src="/aichat.webp"
         alt=""
         className="fixed inset-0 -z-10 size-full scale-105 object-cover object-[50%_60%] blur-[1px]"
       />

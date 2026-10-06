@@ -17,7 +17,7 @@ export function HomeHero({ title, subtitle, name }: HomeHeroProps) {
   return (
     <header className="relative isolate -mx-4 -mt-[calc(env(safe-area-inset-top)+1.5rem)] mb-5 flex h-[40dvh] min-h-72 flex-col justify-between overflow-hidden rounded-b-3xl p-4 pt-[calc(env(safe-area-inset-top)+1rem)]">
       <img
-        src="/homepage-hero.jpg"
+        src="/homepage-hero.webp"
         alt=""
         className="absolute inset-0 -z-10 size-full object-cover object-[50%_45%]"
       />
